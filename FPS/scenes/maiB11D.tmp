@@ -1,0 +1,54 @@
+[gd_scene load_steps=9 format=3 uid="uid://bx1l1r172w6gu"]
+
+[ext_resource type="Texture2D" uid="uid://b8deswinw1boi" path="res://FPS-controller-assets-main/assets/textures/dev/grids/Dark/texture_07.png" id="1_81srn"]
+[ext_resource type="Texture2D" uid="uid://wa81vw3ft7gg" path="res://FPS-controller-assets-main/assets/hdris/kloofendal_48d_partly_cloudy_puresky_2k.hdr" id="2_dcb25"]
+[ext_resource type="Script" path="res://scripts/Player.gd" id="3_6i0hb"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_b7hg3"]
+albedo_texture = ExtResource("1_81srn")
+uv1_triplanar = true
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_asxoo"]
+panorama = ExtResource("2_dcb25")
+
+[sub_resource type="Sky" id="Sky_c2jhp"]
+sky_material = SubResource("PanoramaSkyMaterial_asxoo")
+
+[sub_resource type="Environment" id="Environment_yoc4g"]
+background_mode = 2
+sky = SubResource("Sky_c2jhp")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_w2f3s"]
+
+[node name="World" type="Node3D"]
+
+[node name="stage" type="Node3D" parent="."]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="stage"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+use_collision = true
+size = Vector3(20, 1, 20)
+material = SubResource("StandardMaterial3D_b7hg3")
+
+[node name="env" type="Node3D" parent="."]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="env"]
+environment = SubResource("Environment_yoc4g")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="env"]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Player" type="CharacterBody3D" parent="."]
+script = ExtResource("3_6i0hb")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05289, 0)
+shape = SubResource("CapsuleShape3D_w2f3s")
+
+[node name="Head" type="Node3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
+
+[node name="Camera3D" type="Camera3D" parent="Player/Head"]

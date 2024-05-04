@@ -1,0 +1,98 @@
+[gd_scene load_steps=14 format=3 uid="uid://bx1l1r172w6gu"]
+
+[ext_resource type="Texture2D" uid="uid://b8deswinw1boi" path="res://FPS-controller-assets-main/assets/textures/dev/grids/Dark/texture_07.png" id="1_81srn"]
+[ext_resource type="Texture2D" uid="uid://cawatu70p8w03" path="res://FPS-controller-assets-main/assets/textures/dev/grids/Orange/texture_05.png" id="2_5mtyi"]
+[ext_resource type="Texture2D" uid="uid://wa81vw3ft7gg" path="res://FPS-controller-assets-main/assets/hdris/kloofendal_48d_partly_cloudy_puresky_2k.hdr" id="2_dcb25"]
+[ext_resource type="Script" path="res://scripts/Player.gd" id="3_6i0hb"]
+[ext_resource type="Texture2D" uid="uid://c64awykxuut7f" path="res://FPS-controller-assets-main/assets/textures/dev/grids/Orange/GrassGreenHealthy_flatsphere_large.jpg" id="3_lkk60"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_b7hg3"]
+albedo_texture = ExtResource("1_81srn")
+uv1_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2ohpm"]
+albedo_texture = ExtResource("2_5mtyi")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gc5ha"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yjsm3"]
+albedo_texture = ExtResource("3_lkk60")
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_asxoo"]
+panorama = ExtResource("2_dcb25")
+
+[sub_resource type="Sky" id="Sky_c2jhp"]
+sky_material = SubResource("PanoramaSkyMaterial_asxoo")
+
+[sub_resource type="Environment" id="Environment_yoc4g"]
+background_mode = 2
+sky = SubResource("Sky_c2jhp")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_w2f3s"]
+
+[node name="World" type="Node3D"]
+
+[node name="stage" type="Node3D" parent="."]
+
+[node name="Floor" type="CSGBox3D" parent="stage"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+use_collision = true
+size = Vector3(20, 1, 20)
+material = SubResource("StandardMaterial3D_b7hg3")
+
+[node name="Box2" type="CSGBox3D" parent="stage"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.83326, 2.44926, -1.11325)
+use_collision = true
+size = Vector3(1, 1.5, 5)
+material = SubResource("StandardMaterial3D_b7hg3")
+
+[node name="Box3" type="CSGBox3D" parent="stage"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.58341, 0.423616, 0.480469)
+material_override = SubResource("StandardMaterial3D_2ohpm")
+use_collision = true
+size = Vector3(1, 1, 1.96094)
+
+[node name="Box4" type="CSGBox3D" parent="stage"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.58341, 1.2993, 3.80492)
+material_override = SubResource("StandardMaterial3D_2ohpm")
+use_collision = true
+size = Vector3(1, 1, 1.96094)
+
+[node name="Box5" type="CSGBox3D" parent="stage"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.89424, 1.9865, 3.3633)
+material_override = SubResource("StandardMaterial3D_2ohpm")
+use_collision = true
+size = Vector3(5, 1, 1.961)
+material = SubResource("StandardMaterial3D_gc5ha")
+
+[node name="CSGTorus3D" type="CSGTorus3D" parent="stage"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.9246, 0.483999, -7.48518)
+use_collision = true
+inner_radius = 2.766
+outer_radius = 2.2
+sides = 16
+ring_sides = 10
+material = SubResource("StandardMaterial3D_yjsm3")
+
+[node name="env" type="Node3D" parent="."]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="env"]
+environment = SubResource("Environment_yoc4g")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="env"]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Player" type="CharacterBody3D" parent="."]
+script = ExtResource("3_6i0hb")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05289, 0)
+shape = SubResource("CapsuleShape3D_w2f3s")
+
+[node name="Head" type="Node3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
+
+[node name="Camera3D" type="Camera3D" parent="Player/Head"]

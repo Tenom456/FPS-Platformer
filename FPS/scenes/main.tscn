@@ -1,0 +1,91 @@
+[gd_scene load_steps=15 format=3 uid="uid://bx1l1r172w6gu"]
+
+[ext_resource type="Texture2D" uid="uid://b8deswinw1boi" path="res://FPS-controller-assets-main/assets/textures/dev/grids/Dark/texture_07.png" id="1_81srn"]
+[ext_resource type="Texture2D" uid="uid://dh6wbpggy8tvy" path="res://FPS-controller-assets-main/assets/textures/dev/grids/istockphoto-134127025-612x612.jpg" id="1_fxp6d"]
+[ext_resource type="Texture2D" uid="uid://wa81vw3ft7gg" path="res://FPS-controller-assets-main/assets/hdris/kloofendal_48d_partly_cloudy_puresky_2k.hdr" id="2_dcb25"]
+[ext_resource type="Script" path="res://scripts/Player.gd" id="3_6i0hb"]
+[ext_resource type="PackedScene" uid="uid://w6ktrhdo1xn0" path="res://models/air con.blend" id="5_poyrm"]
+[ext_resource type="PackedScene" uid="uid://b4q4a2w7qu416" path="res://models/3d buildings2.blend" id="6_eoluv"]
+[ext_resource type="PackedScene" uid="uid://bqofpfj4oroy6" path="res://models/roof acess room.blend" id="7_ana2o"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_41pav"]
+albedo_texture = ExtResource("1_fxp6d")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_b7hg3"]
+albedo_texture = ExtResource("1_81srn")
+uv1_triplanar = true
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_asxoo"]
+panorama = ExtResource("2_dcb25")
+
+[sub_resource type="Sky" id="Sky_c2jhp"]
+sky_material = SubResource("PanoramaSkyMaterial_asxoo")
+
+[sub_resource type="Environment" id="Environment_yoc4g"]
+background_mode = 2
+sky = SubResource("Sky_c2jhp")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_w2f3s"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_7q5kc"]
+height = 1.2
+
+[node name="World" type="Node3D"]
+
+[node name="stage" type="Node3D" parent="."]
+
+[node name="Floor" type="CSGBox3D" parent="stage"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+material_override = SubResource("StandardMaterial3D_41pav")
+use_collision = true
+size = Vector3(20, 1, 20)
+material = SubResource("StandardMaterial3D_b7hg3")
+
+[node name="Floor2" type="CSGBox3D" parent="stage"]
+transform = Transform3D(0.3823, 0, 0, 0, 1.1, 0, 0, 0, 0.208276, 1.38073, 0.534208, -31.0801)
+use_collision = true
+size = Vector3(20, 1, 20)
+material = SubResource("StandardMaterial3D_b7hg3")
+
+[node name="env" type="Node3D" parent="."]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="env"]
+environment = SubResource("Environment_yoc4g")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="env"]
+transform = Transform3D(-0.72085, -0.6709, 0.17398, -0.292264, 0.521848, 0.801409, -0.628456, 0.526848, -0.572253, 0, 4.30273, 0)
+light_color = Color(0.435294, 0.435294, 0.435294, 1)
+light_energy = 0.0
+light_indirect_energy = 0.0
+light_volumetric_fog_energy = 0.0
+shadow_enabled = true
+
+[node name="Player" type="CharacterBody3D" parent="."]
+script = ExtResource("3_6i0hb")
+
+[node name="standing_collision_shape" type="CollisionShape3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05289, 0)
+shape = SubResource("CapsuleShape3D_w2f3s")
+
+[node name="crouching_collision_shape2" type="CollisionShape3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.621372, 0)
+shape = SubResource("CapsuleShape3D_7q5kc")
+disabled = true
+
+[node name="Head" type="Node3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
+
+[node name="Camera3D" type="Camera3D" parent="Player/Head"]
+
+[node name="RayCast3D" type="RayCast3D" parent="Player"]
+
+[node name="3d buildings2" parent="." instance=ExtResource("6_eoluv")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.25676, -9.636, -54.94)
+
+[node name="air con" parent="3d buildings2" instance=ExtResource("5_poyrm")]
+transform = Transform3D(1, 0, 0, 0, -0.99939, 0.0348994, 0, -0.0348994, -0.99939, 0.845467, 9.67103, 56.1399)
+
+[node name="roof acess room" parent="." instance=ExtResource("7_ana2o")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.68749, -2.5929, -48.9867)
